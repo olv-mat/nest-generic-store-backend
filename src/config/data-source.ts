@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv';
+import { CategoryEntity } from 'src/category/entities/category.entity';
 import { DataSource } from 'typeorm';
 
 dotenv.config();
@@ -9,7 +10,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME!,
   password: process.env.DB_PASSWORD!,
   database: process.env.DB_DATABASE!,
-  entities: [],
+  entities: [CategoryEntity],
   migrations: [__dirname + '/../migrations/**/*{.ts,.js}'],
   synchronize: false,
 });

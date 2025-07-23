@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
+import { CategoryEntity } from 'src/category/entities/category.entity';
 
 /* 
 npm install @nestjs/typeorm typeorm
@@ -21,7 +22,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       username: this.config.get<string>('DB_USERNAME'),
       password: this.config.get<string>('DB_PASSWORD'),
       database: this.config.get<string>('DB_DATABASE'),
-      entities: [],
+      entities: [CategoryEntity],
       synchronize: false,
     };
   }
