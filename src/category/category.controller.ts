@@ -1,8 +1,15 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
 import { CategoryService } from './category.service';
-import { CategoryEntity } from './entities/category.entity';
 import { CreateCategoryDto } from './dtos/CreateCategory.dto';
 import { ResponseDTO } from './dtos/Response.dto';
+import { CategoryEntity } from './entities/category.entity';
 
 @Controller('category')
 export class CategoryController {
@@ -11,6 +18,13 @@ export class CategoryController {
   @Get()
   async findAll(): Promise<CategoryEntity[]> {
     return await this.categoryService.findAll();
+  }
+
+  @Get(':uuid')
+  async findOne(
+    @Param('uuid', new ParseUUIDPipe()) uuid: string,
+  ): Promise<CategoryEntity> {
+    return await this.categoryService.findOne(uuid);
   }
 
   @Post()
