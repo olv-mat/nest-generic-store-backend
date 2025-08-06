@@ -38,6 +38,15 @@ export class CategoryService {
     return new ResponseDTO(category.id, 'Category created sucessfully');
   }
 
+  async delete(uuid: string): Promise<ResponseDTO> {
+    const exists = await this.findCategoryById(uuid);
+    if (!exists) {
+      throw new NotFoundException('Category not found');
+    }
+    await this.categoryRepository.delete(uuid);
+    return new ResponseDTO(uuid, 'Category deleted sucessfully');
+  }
+
   private async findCategoryById(uuid: string): Promise<CategoryEntity | null> {
     return await this.categoryRepository.findOne({
       where: { id: uuid },

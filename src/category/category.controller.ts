@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseUUIDPipe,
@@ -30,5 +31,12 @@ export class CategoryController {
   @Post()
   async create(@Body() data: CreateCategoryDto): Promise<ResponseDTO> {
     return await this.categoryService.create(data);
+  }
+
+  @Delete(':uuid')
+  async delete(
+    @Param('uuid', new ParseUUIDPipe()) uuid: string,
+  ): Promise<ResponseDTO> {
+    return await this.categoryService.delete(uuid);
   }
 }
