@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
-import { CategoryEntity } from 'src/category/entities/category.entity';
+import { CategoryEntity } from 'src/modules/category/entities/category.entity';
 
 /* 
 npm install @nestjs/typeorm typeorm
