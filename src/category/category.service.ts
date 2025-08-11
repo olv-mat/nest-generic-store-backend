@@ -1,5 +1,5 @@
 import {
-  BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -31,20 +31,26 @@ export class CategoryService {
     const category = await this.categoryRepository.save(dto);
     return this.responseMapper.toResponse(
       category.id,
-      'Category created sucessfully',
+      'Category created successfully',
     );
   }
 
   public async update(uuid: string, dto: CategoryDTO): Promise<ResponseDTO> {
     const category = await this.findCategoryById(uuid);
-    await this.categoryRepository.update(uuid, dto);
-    return this.responseMapper.toResponse(uuid, 'Category updated sucessfully');
+    await this.categoryRepository.update(category.id, dto);
+    return this.responseMapper.toResponse(
+      uuid,
+      'Category updated successfully',
+    );
   }
 
   public async delete(uuid: string): Promise<ResponseDTO> {
     const category = await this.findCategoryById(uuid);
-    await this.categoryRepository.delete(uuid);
-    return this.responseMapper.toResponse(uuid, 'Category deleted sucessfully');
+    await this.categoryRepository.delete(category.id);
+    return this.responseMapper.toResponse(
+      uuid,
+      'Category deleted successfully',
+    );
   }
 
   private async findCategoryById(uuid: string): Promise<CategoryEntity> {
@@ -62,7 +68,7 @@ export class CategoryService {
       where: { category: name },
     });
     if (category) {
-      throw new BadRequestException('Category already exists');
+      throw new ConflictException('Category already exists');
     }
   }
 }
