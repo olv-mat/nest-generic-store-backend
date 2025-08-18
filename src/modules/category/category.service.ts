@@ -5,10 +5,10 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CategoryDTO } from './dtos/CreateCategory.dto';
-import { ResponseDTO } from './dtos/Response.dto';
+import { CategoryDTO } from './dtos/Category.dto';
+import { ResponseDTO } from '../../common/dtos/Response.dto';
 import { CategoryEntity } from './entities/category.entity';
-import { ResponseMapper } from './mappers/response.mapper';
+import { ResponseMapper } from '../../common/mappers/response.mapper';
 
 @Injectable()
 export class CategoryService {
