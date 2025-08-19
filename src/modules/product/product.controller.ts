@@ -1,10 +1,10 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { ProductService } from './product.service';
-import { ProductEntity } from './entities/product.entity';
-import { UuidDTO } from './dtos/Uuid.dto';
-import { create } from 'domain';
-import { CreateProductDto } from './dtos/CreateProduct.dto';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ResponseDTO } from 'src/common/dtos/Response.dto';
+import { CreateProductDto } from './dtos/CreateProduct.dto';
+import { UpdateProductDto } from './dtos/UpdateProduct.dto';
+import { UuidDTO } from './dtos/Uuid.dto';
+import { ProductEntity } from './entities/product.entity';
+import { ProductService } from './product.service';
 
 @Controller('product')
 export class ProductController {
@@ -23,5 +23,13 @@ export class ProductController {
   @Post()
   public async create(@Body() dto: CreateProductDto): Promise<ResponseDTO> {
     return await this.productService.create(dto);
+  }
+
+  @Patch(':uuid')
+  public async update(
+    @Param() { uuid }: UuidDTO,
+    @Body() dto: UpdateProductDto,
+  ): Promise<ResponseDTO> {
+    return await this.productService.update(uuid, dto);
   }
 }

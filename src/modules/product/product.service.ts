@@ -9,6 +9,7 @@ import { ProductEntity } from './entities/product.entity';
 import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { ResponseMapper } from 'src/common/mappers/response.mapper';
 import { ResponseDTO } from 'src/common/dtos/Response.dto';
+import { UpdateProductDto } from './dtos/UpdateProduct.dto';
 
 @Injectable()
 export class ProductService {
@@ -33,6 +34,15 @@ export class ProductService {
       product.id,
       'Product created successfully',
     );
+  }
+
+  public async update(
+    uuid: string,
+    dto: UpdateProductDto,
+  ): Promise<ResponseDTO> {
+    const product = await this.findProductById(uuid);
+    await this.productRepository.update(product.id, dto);
+    return this.responseMapper.toResponse(uuid, 'Product updated successfully');
   }
 
   private async findProductById(uuid: string): Promise<ProductEntity> {
