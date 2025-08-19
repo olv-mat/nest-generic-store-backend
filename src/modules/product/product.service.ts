@@ -45,6 +45,15 @@ export class ProductService {
     return this.responseMapper.toResponse(uuid, 'Product updated successfully');
   }
 
+  public async delete(uuid: string): Promise<ResponseDTO> {
+    const product = await this.findProductById(uuid);
+    await this.productRepository.softDelete({ id: product.id });
+    return this.responseMapper.toResponse(
+      product.id,
+      'Product deleted successfully',
+    );
+  }
+
   private async findProductById(uuid: string): Promise<ProductEntity> {
     const product = await this.productRepository.findOne({
       where: { id: uuid },
