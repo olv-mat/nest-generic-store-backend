@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsString, Matches, MaxLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsUUID,
+  Matches,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateProductDto {
   @IsNotEmpty()
@@ -12,4 +18,8 @@ export class CreateProductDto {
   @MaxLength(255)
   @Matches(/\S/, { message: 'price cannot contain only spaces' })
   price: string;
+
+  @IsNotEmpty()
+  @IsUUID()
+  categoryId: string;
 }

@@ -29,7 +29,10 @@ export class ProductService {
 
   public async create(dto: CreateProductDto): Promise<ResponseDTO> {
     await this.checkProductExists(dto.product);
-    const product = await this.productRepository.save(dto);
+    const product = await this.productRepository.save({
+      ...dto,
+      categoryId: { id: dto.categoryId },
+    });
     return this.responseMapper.toResponse(
       product.id,
       'Product created successfully',

@@ -1,8 +1,11 @@
+import { CategoryEntity } from 'src/modules/category/entities/category.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -14,6 +17,18 @@ export class ProductEntity {
 
   @Column({ length: 255, nullable: false })
   product: string;
+
+  /*
+    @ManyToOne -> @OneToMany: ManyToOne Is The Owner (FK In This Table)
+    @OneToOne -> @OneToOne: One Side Must Be The Owner (FK With @JoinColumn)
+    @ManyToMany -> @ManyToMany: Join Table Holds Both FKs
+  */
+
+  @ManyToOne(() => CategoryEntity, (category) => category.products, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'category_id' })
+  categoryId: CategoryEntity;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: string;
