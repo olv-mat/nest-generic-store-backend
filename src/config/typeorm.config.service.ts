@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { CategoryEntity } from 'src/modules/category/entities/category.entity';
 import { ProductEntity } from 'src/modules/product/entities/product.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 
 /* 
 npm install @nestjs/typeorm typeorm
@@ -23,7 +24,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       username: this.config.get<string>('DB_USERNAME'),
       password: this.config.get<string>('DB_PASSWORD'),
       database: this.config.get<string>('DB_DATABASE'),
-      entities: [CategoryEntity, ProductEntity],
+      entities: [CategoryEntity, ProductEntity, UserEntity],
       synchronize: false,
     };
   }
