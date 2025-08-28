@@ -10,7 +10,7 @@ import {
 import { ResponseDTO } from 'src/common/dtos/Response.dto';
 import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { UpdateProductDto } from './dtos/UpdateProduct.dto';
-import { UuidDTO } from './dtos/Uuid.dto';
+import { UuidDTO } from '../../common/dtos/Uuid.dto';
 import { ProductEntity } from './entities/product.entity';
 import { ProductService } from './product.service';
 
