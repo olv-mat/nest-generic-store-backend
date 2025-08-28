@@ -7,10 +7,10 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ResponseDTO } from 'src/common/dtos/Response.dto';
+import { ResponseDto } from 'src/common/dtos/Response.dto';
 import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { UpdateProductDto } from './dtos/UpdateProduct.dto';
-import { UuidDTO } from '../../common/dtos/Uuid.dto';
+import { UuidDto } from '../../common/dtos/Uuid.dto';
 import { ProductEntity } from './entities/product.entity';
 import { ProductService } from './product.service';
 
@@ -24,25 +24,25 @@ export class ProductController {
   }
 
   @Get(':uuid')
-  public async findOne(@Param() { uuid }: UuidDTO): Promise<ProductEntity> {
+  public async findOne(@Param() { uuid }: UuidDto): Promise<ProductEntity> {
     return await this.productService.findOne(uuid);
   }
 
   @Post()
-  public async create(@Body() dto: CreateProductDto): Promise<ResponseDTO> {
+  public async create(@Body() dto: CreateProductDto): Promise<ResponseDto> {
     return await this.productService.create(dto);
   }
 
   @Patch(':uuid')
   public async update(
-    @Param() { uuid }: UuidDTO,
+    @Param() { uuid }: UuidDto,
     @Body() dto: UpdateProductDto,
-  ): Promise<ResponseDTO> {
+  ): Promise<ResponseDto> {
     return await this.productService.update(uuid, dto);
   }
 
   @Delete(':uuid')
-  public async delete(@Param() { uuid }: UuidDTO): Promise<ResponseDTO> {
+  public async delete(@Param() { uuid }: UuidDto): Promise<ResponseDto> {
     return await this.productService.delete(uuid);
   }
 }

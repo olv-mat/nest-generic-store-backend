@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CategoryDTO } from './dtos/Category.dto';
-import { ResponseDTO } from '../../common/dtos/Response.dto';
+import { CategoryDto } from './dtos/Category.dto';
+import { ResponseDto } from '../../common/dtos/Response.dto';
 import { CategoryEntity } from './entities/category.entity';
 import { ResponseMapper } from '../../common/mappers/response.mapper';
 
@@ -26,7 +26,7 @@ export class CategoryService {
     return await this.findCategoryById(uuid);
   }
 
-  public async create(dto: CategoryDTO): Promise<ResponseDTO> {
+  public async create(dto: CategoryDto): Promise<ResponseDto> {
     await this.checkCategoryExists(dto.category);
     const category = await this.categoryRepository.save(dto);
     return this.responseMapper.toResponse(
@@ -35,7 +35,7 @@ export class CategoryService {
     );
   }
 
-  public async update(uuid: string, dto: CategoryDTO): Promise<ResponseDTO> {
+  public async update(uuid: string, dto: CategoryDto): Promise<ResponseDto> {
     const category = await this.findCategoryById(uuid);
     await this.categoryRepository.update(category.id, dto);
     return this.responseMapper.toResponse(
@@ -44,7 +44,7 @@ export class CategoryService {
     );
   }
 
-  public async delete(uuid: string): Promise<ResponseDTO> {
+  public async delete(uuid: string): Promise<ResponseDto> {
     const category = await this.findCategoryById(uuid);
     await this.categoryRepository.delete(category.id);
     return this.responseMapper.toResponse(

@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 import { ProductEntity } from './entities/product.entity';
 import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { ResponseMapper } from 'src/common/mappers/response.mapper';
-import { ResponseDTO } from 'src/common/dtos/Response.dto';
+import { ResponseDto } from 'src/common/dtos/Response.dto';
 import { UpdateProductDto } from './dtos/UpdateProduct.dto';
 
 @Injectable()
@@ -27,7 +27,7 @@ export class ProductService {
     return await this.findProductById(uuid);
   }
 
-  public async create(dto: CreateProductDto): Promise<ResponseDTO> {
+  public async create(dto: CreateProductDto): Promise<ResponseDto> {
     await this.checkProductExists(dto.product);
     const product = await this.productRepository.save({
       ...dto,
@@ -42,7 +42,7 @@ export class ProductService {
   public async update(
     uuid: string,
     dto: UpdateProductDto,
-  ): Promise<ResponseDTO> {
+  ): Promise<ResponseDto> {
     const product = await this.findProductById(uuid);
     const updateData: any = { ...dto };
     if (dto.categoryId) {
@@ -52,7 +52,7 @@ export class ProductService {
     return this.responseMapper.toResponse(uuid, 'Product updated successfully');
   }
 
-  public async delete(uuid: string): Promise<ResponseDTO> {
+  public async delete(uuid: string): Promise<ResponseDto> {
     const product = await this.findProductById(uuid);
     await this.productRepository.softDelete({ id: product.id });
     return this.responseMapper.toResponse(
