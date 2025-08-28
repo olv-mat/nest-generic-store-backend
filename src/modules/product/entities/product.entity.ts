@@ -19,13 +19,14 @@ export class ProductEntity {
   product: string;
 
   /*
-    @ManyToOne -> @OneToMany: ManyToOne Is The Owner (FK In This Table)
+    @ManyToOne -> @OneToMany: @ManyToOne Is The Owner (FK In This Table)
     @OneToOne -> @OneToOne: One Side Must Be The Owner (FK With @JoinColumn)
     @ManyToMany -> @ManyToMany: Join Table Holds Both FKs
   */
 
   @ManyToOne(() => CategoryEntity, (category) => category.products, {
     onDelete: 'CASCADE',
+    eager: true,
   })
   @JoinColumn({ name: 'category_id' })
   categoryId: CategoryEntity;

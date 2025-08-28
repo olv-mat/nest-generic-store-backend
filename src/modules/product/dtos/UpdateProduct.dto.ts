@@ -2,9 +2,11 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUUID,
   Matches,
   MaxLength,
 } from 'class-validator';
+import { CategoryExists } from '../validators/category-exists.decorator';
 
 export class UpdateProductDto {
   @IsOptional()
@@ -20,4 +22,9 @@ export class UpdateProductDto {
   @MaxLength(255)
   @Matches(/\S/, { message: 'price cannot contain only spaces' })
   price?: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @CategoryExists({ message: 'this category does not exist' })
+  categoryId?: string;
 }

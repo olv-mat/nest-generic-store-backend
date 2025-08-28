@@ -5,6 +5,7 @@ import {
   Matches,
   MaxLength,
 } from 'class-validator';
+import { CategoryExists } from '../validators/category-exists.decorator';
 
 export class CreateProductDto {
   @IsNotEmpty()
@@ -20,6 +21,6 @@ export class CreateProductDto {
   price: string;
 
   @IsNotEmpty()
-  @IsUUID()
+  @CategoryExists({ message: 'this category does not exist' })
   categoryId: string;
 }
