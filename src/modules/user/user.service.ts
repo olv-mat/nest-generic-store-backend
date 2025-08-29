@@ -4,11 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './entities/user.entity';
-import { Repository } from 'typeorm';
-import { CreateUserDto } from './dtos/CreateUser.dto';
 import { ResponseDto } from 'src/common/dtos/Response.dto';
 import { ResponseMapper } from 'src/common/mappers/response.mapper';
+import { Repository } from 'typeorm';
+import { CreateUserDto } from './dtos/CreateUser.dto';
+import { UpdateUserDto } from './dtos/UpdateUser.dto';
+import { UserEntity } from './entities/user.entity';
+import { sanitizeUpdatePayload } from 'src/common/utils/sanitize-update-payload.util';
 
 @Injectable()
 export class UserService {
@@ -30,6 +32,13 @@ export class UserService {
     await this.checkUserExists(dto.email);
     const user = await this.userRepository.save(dto);
     return this.responseMapper.toResponse(user.id, 'User created successfully');
+  }
+
+  public async update(uuid: string, dto: UpdateUserDto): Promise<ResponseDto> {
+    const user = await this.findUserById(uuid);
+    const updateData = sanitizeUpdatePayload(dto);
+    await this.userRepository.update(user.id, updateData);
+    return this.responseMapper.toResponse(user.id, 'User updated successfully');
   }
 
   private async findUserById(uuid: string): Promise<UserEntity> {
