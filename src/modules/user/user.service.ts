@@ -25,7 +25,7 @@ export class UserService {
   }
 
   public async findOne(uuid: string): Promise<UserEntity> {
-    return this.findUserById(uuid);
+    return await this.findUserById(uuid);
   }
 
   public async create(dto: CreateUserDto): Promise<ResponseDto> {
@@ -41,6 +41,12 @@ export class UserService {
     return this.responseMapper.toResponse(user.id, 'User updated successfully');
   }
 
+  public async delete(uuid: string): Promise<ResponseDto> {
+    const user = await this.findUserById(uuid);
+    await this.userRepository.delete(user);
+    return this.responseMapper.toResponse(user.id, 'User deleted successfully');
+  }
+
   private async findUserById(uuid: string): Promise<UserEntity> {
     const user = await this.userRepository.findOne({ where: { id: uuid } });
     if (!user) {
@@ -52,7 +58,7 @@ export class UserService {
   private async checkUserExists(email: string): Promise<void> {
     const user = await this.userRepository.findOne({ where: { email: email } });
     if (user) {
-      throw new ConflictException('Email already in use');
+      throw new ConflictException('User already exists');
     }
   }
 }

@@ -4,12 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ProductEntity } from './entities/product.entity';
-import { CreateProductDto } from './dtos/CreateProduct.dto';
-import { ResponseMapper } from 'src/common/mappers/response.mapper';
 import { ResponseDto } from 'src/common/dtos/Response.dto';
+import { ResponseMapper } from 'src/common/mappers/response.mapper';
+import { Repository } from 'typeorm';
+import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { UpdateProductDto } from './dtos/UpdateProduct.dto';
+import { ProductEntity } from './entities/product.entity';
+import { sanitizeUpdatePayload } from 'src/common/utils/sanitize-update-payload.util';
 
 @Injectable()
 export class ProductService {
@@ -44,7 +45,7 @@ export class ProductService {
     dto: UpdateProductDto,
   ): Promise<ResponseDto> {
     const product = await this.findProductById(uuid);
-    const updateData: any = { ...dto };
+    const updateData = sanitizeUpdatePayload(dto);
     if (dto.categoryId) {
       updateData.categoryId = { id: dto.categoryId };
     }
