@@ -5,7 +5,7 @@ import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { DataSource } from 'typeorm';
 
 dotenv.config();
-export const AppDataSource = new DataSource({
+export const AppDataSource: DataSource = new DataSource({
   type: 'postgres',
   host: process.env.DB_HOST!,
   port: parseInt(process.env.DB_PORT!),
