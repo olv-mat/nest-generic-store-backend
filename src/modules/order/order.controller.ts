@@ -1,6 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { OrderEntity } from './entities/order.entity';
+import { UuidDto } from 'src/common/dtos/Uuid.dto';
 
 @Controller('order')
 export class OrderController {
@@ -9,5 +10,10 @@ export class OrderController {
   @Get()
   public async findAll(): Promise<OrderEntity[]> {
     return this.orderService.findAll();
+  }
+
+  @Get(':uuid')
+  public async findOne(@Param() { uuid }: UuidDto): Promise<OrderEntity> {
+    return this.orderService.findOne(uuid);
   }
 }
