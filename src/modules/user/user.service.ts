@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcrypt';
 import {
   ConflictException,
   Injectable,
@@ -30,7 +31,11 @@ export class UserService {
 
   public async create(dto: CreateUserDto): Promise<ResponseDto> {
     await this.checkUserExists(dto.email);
-    const user = await this.userRepository.save(dto);
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+    const user = await this.userRepository.save({
+      ...dto,
+      password: hashedPassword,
+    });
     return this.responseMapper.toResponse(user.id, 'User created successfully');
   }
 
