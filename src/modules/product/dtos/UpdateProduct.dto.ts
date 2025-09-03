@@ -25,5 +25,5 @@ export class UpdateProductDto {
   @IsOptional()
   @IsNotEmpty()
   @CategoryExists({ message: 'this category does not exist' })
-  categoryId?: string;
+  category?: string;
 }

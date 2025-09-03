@@ -32,7 +32,7 @@ export class ProductService {
     await this.checkProductExists(dto.product);
     const product = await this.productRepository.save({
       ...dto,
-      categoryId: { id: dto.categoryId },
+      category: { id: dto.category },
     });
     return this.responseMapper.toResponse(
       product.id,
@@ -46,8 +46,8 @@ export class ProductService {
   ): Promise<ResponseDto> {
     const product = await this.findProductById(uuid);
     const updateData = sanitizeUpdatePayload(dto);
-    if (dto.categoryId) {
-      updateData.categoryId = { id: dto.categoryId };
+    if (dto.category) {
+      updateData.categoryId = { id: dto.category };
     }
     await this.productRepository.update(product.id, updateData);
     return this.responseMapper.toResponse(uuid, 'Product updated successfully');

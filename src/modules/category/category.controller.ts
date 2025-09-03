@@ -5,12 +5,12 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
-  Patch,
   Post,
+  Put,
 } from '@nestjs/common';
+import { ResponseDto } from '../../common/dtos/Response.dto';
 import { CategoryService } from './category.service';
 import { CategoryDto } from './dtos/Category.dto';
-import { ResponseDto } from '../../common/dtos/Response.dto';
 import { CategoryEntity } from './entities/category.entity';
 
 @Controller('category')
@@ -34,7 +34,7 @@ export class CategoryController {
     return await this.categoryService.create(dto);
   }
 
-  @Patch(':uuid')
+  @Put(':uuid')
   public async update(
     @Param('uuid', new ParseUUIDPipe()) uuid: string,
     @Body() dto: CategoryDto,

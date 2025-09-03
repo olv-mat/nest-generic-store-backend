@@ -47,13 +47,16 @@ export class UserService {
   public async update(uuid: string, dto: UpdateUserDto): Promise<ResponseDto> {
     const user = await this.findUserById(uuid);
     const updateData = sanitizeUpdatePayload(dto);
+    if (dto.password) {
+      updateData.password = await bcrypt.hash(dto.password, 10);
+    }
     await this.userRepository.update(user.id, updateData);
     return this.responseMapper.toResponse(user.id, 'User updated successfully');
   }
 
   public async delete(uuid: string): Promise<ResponseDto> {
     const user = await this.findUserById(uuid);
-    await this.userRepository.delete(user);
+    await this.userRepository.delete(user.id);
     return this.responseMapper.toResponse(user.id, 'User deleted successfully');
   }
 
