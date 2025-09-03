@@ -22,7 +22,7 @@ export class OrderEntity {
   @ManyToOne(() => UserEntity, (user) => user.orders, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn()
+  @JoinColumn({ name: 'user' })
   user: UserEntity;
 
   @ManyToMany(() => ProductEntity, {
@@ -30,14 +30,8 @@ export class OrderEntity {
   })
   @JoinTable({
     name: 'orders_products',
-    joinColumn: {
-      name: 'order_id',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'product_id',
-      referencedColumnName: 'id',
-    },
+    joinColumn: { name: 'order_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'product_id', referencedColumnName: 'id' },
   })
   products: ProductEntity[];
 

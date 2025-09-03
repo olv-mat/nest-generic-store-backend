@@ -12,14 +12,14 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+/*
+  @ManyToOne -> @OneToMany: @ManyToOne Is The Owner (FK In This Table)
+  @OneToOne -> @OneToOne: One Side Must Be The Owner (FK With @JoinColumn)
+  @ManyToMany -> @ManyToMany: @JoinTable Holds Both FKs
+*/
+
 @Entity({ name: 'products' })
 export class ProductEntity {
-  /*
-    @ManyToOne -> @OneToMany: @ManyToOne Is The Owner (FK In This Table)
-    @OneToOne -> @OneToOne: One Side Must Be The Owner (FK With @JoinColumn)
-    @ManyToMany -> @ManyToMany: Join Table Holds Both FKs (With @JoinTable)
-  */
-
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

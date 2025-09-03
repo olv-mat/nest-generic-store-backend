@@ -30,6 +30,11 @@ export class UserService {
   }
 
   public async create(dto: CreateUserDto): Promise<ResponseDto> {
+    /*
+      npm install bcrypt
+      npm install -D @types/bcrypt
+    */
+
     await this.checkUserExists(dto.email);
     const hashedPassword = await bcrypt.hash(dto.password, 10);
     const user = await this.userRepository.save({
