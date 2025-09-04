@@ -7,6 +7,7 @@ import { UserEntity } from '../user/entities/user.entity';
 import { CreateOrderDto } from './dtos/CreateOrder.dto';
 import { OrderEntity } from './entities/order.entity';
 import { OrderStatus } from './enums/order-status.enum';
+import { ResponseDto } from 'src/common/dtos/Response.dto';
 
 @Injectable()
 export class OrderService {
@@ -28,7 +29,7 @@ export class OrderService {
     return this.findOrderById(uuid);
   }
 
-  public async create(dto: CreateOrderDto) {
+  public async create(dto: CreateOrderDto): Promise<ResponseDto> {
     const user = await this.userRepository.findOneByOrFail({ id: dto.user });
     const products = await this.productRepository.findBy({
       id: In(dto.products),

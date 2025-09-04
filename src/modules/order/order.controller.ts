@@ -3,6 +3,7 @@ import { OrderService } from './order.service';
 import { OrderEntity } from './entities/order.entity';
 import { UuidDto } from 'src/common/dtos/Uuid.dto';
 import { CreateOrderDto } from './dtos/CreateOrder.dto';
+import { ResponseDto } from 'src/common/dtos/Response.dto';
 
 @Controller('order')
 export class OrderController {
@@ -19,7 +20,7 @@ export class OrderController {
   }
 
   @Post()
-  public async create(@Body() dto: CreateOrderDto) {
+  public async create(@Body() dto: CreateOrderDto): Promise<ResponseDto> {
     return this.orderService.create(dto);
   }
 }
