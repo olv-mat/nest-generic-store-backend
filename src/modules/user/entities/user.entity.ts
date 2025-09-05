@@ -15,8 +15,6 @@ export class UserEntity {
   @Column({ length: 255, nullable: false, select: false })
   password: string;
 
-  @OneToMany(() => OrderEntity, (order) => order.user, {
-    eager: true,
-  })
+  @OneToMany(() => OrderEntity, (order) => order.user)
   orders: OrderEntity[];
 }

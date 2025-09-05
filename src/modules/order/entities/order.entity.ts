@@ -5,14 +5,13 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { OrderStatus } from '../enums/order-status.enum';
-import { ProductEntity } from 'src/modules/product/entities/product.entity';
+import { OrderItemEntity } from './order-item.entity';
 
 @Entity({ name: 'orders' })
 export class OrderEntity {
@@ -22,23 +21,24 @@ export class OrderEntity {
   @ManyToOne(() => UserEntity, (user) => user.orders, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'user' })
+  @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
-  @ManyToMany(() => ProductEntity, {
+  @OneToMany(() => OrderItemEntity, (item) => item.order, {
     eager: true,
+    cascade: true,
   })
-  @JoinTable({
-    name: 'orders_products',
-    joinColumn: { name: 'order_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'product_id', referencedColumnName: 'id' },
-  })
-  products: ProductEntity[];
+  items: OrderItemEntity[];
 
   @Column({ name: 'total_price', type: 'decimal', precision: 10, scale: 2 })
   totalPrice: string;
 
-  @Column({ type: 'enum', enum: OrderStatus, nullable: false })
+  @Column({
+    type: 'enum',
+    enum: OrderStatus,
+    nullable: false,
+    default: OrderStatus.PENDING,
+  })
   status: OrderStatus;
 
   @CreateDateColumn({ name: 'created_at' })

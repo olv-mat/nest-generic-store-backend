@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
 import { CategoryEntity } from 'src/modules/category/entities/category.entity';
+import { OrderItemEntity } from 'src/modules/order/entities/order-item.entity';
 import { OrderEntity } from 'src/modules/order/entities/order.entity';
 import { ProductEntity } from 'src/modules/product/entities/product.entity';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
@@ -13,7 +14,13 @@ export const AppDataSource: DataSource = new DataSource({
   username: process.env.DB_USERNAME!,
   password: process.env.DB_PASSWORD!,
   database: process.env.DB_DATABASE!,
-  entities: [CategoryEntity, ProductEntity, UserEntity, OrderEntity],
+  entities: [
+    CategoryEntity,
+    ProductEntity,
+    UserEntity,
+    OrderEntity,
+    OrderItemEntity,
+  ],
   migrations: [__dirname + '/../migrations/**/*{.ts,.js}'],
   synchronize: false,
 });

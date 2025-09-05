@@ -38,17 +38,14 @@ export class OrderService {
       .reduce((sum, product) => sum + Number(product.price), 0)
       .toFixed(2);
 
-    const newOrder = this.orderRepository.create({
-      user: user,
-      products: products,
-      totalPrice: totalPrice,
-      status: OrderStatus.PENDING,
-    });
-    const order = await this.orderRepository.save(newOrder);
-    return this.responseMapper.toResponse(
-      order.id,
-      'Order created successfully',
-    );
+    // const newOrder = this.orderRepository.create({
+    //   user: user,
+    //   products: products,
+    //   totalPrice: totalPrice,
+    //   status: OrderStatus.PENDING,
+    // });
+    // const order = await this.orderRepository.save(newOrder);
+    return this.responseMapper.toResponse('', 'Order created successfully');
   }
 
   private async findOrderById(uuid: string): Promise<OrderEntity> {
