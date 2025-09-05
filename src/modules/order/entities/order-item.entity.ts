@@ -28,10 +28,4 @@ export class OrderItemEntity {
 
   @Column({ type: 'int', nullable: false })
   quantity: number;
-
-  @Column({ name: 'unit_price', type: 'decimal', precision: 10, scale: 2 })
-  unitPrice: string;
-
-  @Column({ name: 'total_price', type: 'decimal', precision: 10, scale: 2 })
-  totalPrice: string;
 }

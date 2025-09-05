@@ -7,7 +7,8 @@ import { ProductEntity } from '../product/entities/product.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { ResponseMapper } from 'src/common/mappers/response.mapper';
 import { UserExistsConstraint } from './validators/user-exists.constraint';
-import { ProductsExistsConstraint } from './validators/products-exists.constraint';
+import { ProductExistsConstraint } from './validators/product-exists.constraint';
+import { UniqueProductConstraint } from './validators/unique-product.constraint';
 
 @Module({
   imports: [TypeOrmModule.forFeature([OrderEntity, UserEntity, ProductEntity])],
@@ -16,7 +17,8 @@ import { ProductsExistsConstraint } from './validators/products-exists.constrain
     OrderService,
     ResponseMapper,
     UserExistsConstraint,
-    ProductsExistsConstraint,
+    ProductExistsConstraint,
+    UniqueProductConstraint,
   ],
 })
 export class OrderModule {}

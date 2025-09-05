@@ -1,14 +1,14 @@
 import { registerDecorator, ValidationOptions } from 'class-validator';
-import { ProductsExistsConstraint } from './products-exists.constraint';
+import { UniqueProductConstraint } from './unique-product.constraint';
 
-export function ProductsExists(validationOptions?: ValidationOptions) {
+export function UniqueProduct(validationOptions?: ValidationOptions) {
   return function (object: any, propertyName: string) {
     registerDecorator({
-      name: 'ProductsExists',
+      name: 'UniqueProduct',
       target: object.constructor,
       propertyName,
       options: validationOptions,
-      validator: ProductsExistsConstraint,
+      validator: UniqueProductConstraint,
     });
   };
 }

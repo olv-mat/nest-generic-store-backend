@@ -1,26 +1,27 @@
+import { Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsArray,
   IsNotEmpty,
   IsString,
-  Matches,
+  ValidateNested,
 } from 'class-validator';
 import { UserExists } from '../validators/user-exists.decorator';
-import { ProductsExists } from '../validators/products-exists.decorator';
+import { CreateOrderItemDto } from './CreateOrderItem.dto';
+import { UniqueProduct } from '../validators/unique-product.decorator';
 
 export class CreateOrderDto {
+  @IsString()
   @IsNotEmpty()
   @UserExists({ message: 'this user does not exist' })
   user: string;
 
   @IsArray()
   @ArrayNotEmpty()
-  @IsString({ each: true })
-  @IsNotEmpty({ each: true })
-  @Matches(/\S/, {
-    each: true,
-    message: 'products cannot contain only spaces',
+  @ValidateNested({ each: true, message: 'each item must be a valid object' })
+  @Type(() => CreateOrderItemDto)
+  @UniqueProduct({
+    message: 'each product must appear only once in the order items',
   })
-  @ProductsExists({ message: 'one or more selected products do not exist' })
-  products: string[];
+  items: CreateOrderItemDto[];
 }
