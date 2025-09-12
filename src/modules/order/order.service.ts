@@ -9,6 +9,7 @@ import { CreateOrderDto } from './dtos/CreateOrder.dto';
 import { OrderItemEntity } from './entities/order-item.entity';
 import { OrderEntity } from './entities/order.entity';
 import { UpdateOrderDto } from './dtos/UpdateOrder.dto';
+import { OrderStatus } from './enums/order-status.enum';
 
 @Injectable()
 export class OrderService {
@@ -79,6 +80,18 @@ export class OrderService {
     return this.responseMapper.toResponse(
       order.id,
       'Order status updated successfully',
+    );
+  }
+
+  public async delete(uuid: string): Promise<ResponseDto> {
+    const order = await this.findOrderById(uuid);
+    await this.orderRepository.update(order.id, {
+      status: OrderStatus.CANCELED,
+    });
+    await this.orderRepository.softDelete(order.id);
+    return this.responseMapper.toResponse(
+      order.id,
+      'Order deleted successfully',
     );
   }
 
