@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { OrderEntity } from './entities/order.entity';
 import { UuidDto } from 'src/common/dtos/Uuid.dto';
 import { CreateOrderDto } from './dtos/CreateOrder.dto';
 import { ResponseDto } from 'src/common/dtos/Response.dto';
+import { UpdateOrderDto } from './dtos/UpdateOrder.dto';
 
 @Controller('order')
 export class OrderController {
@@ -22,5 +23,13 @@ export class OrderController {
   @Post()
   public async create(@Body() dto: CreateOrderDto): Promise<ResponseDto> {
     return this.orderService.create(dto);
+  }
+
+  @Patch(':uuid')
+  public async update(
+    @Param() { uuid }: UuidDto,
+    @Body() dto: UpdateOrderDto,
+  ): Promise<ResponseDto> {
+    return this.orderService.update(uuid, dto);
   }
 }

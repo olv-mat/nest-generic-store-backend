@@ -8,6 +8,7 @@ import { UserEntity } from '../user/entities/user.entity';
 import { CreateOrderDto } from './dtos/CreateOrder.dto';
 import { OrderItemEntity } from './entities/order-item.entity';
 import { OrderEntity } from './entities/order.entity';
+import { UpdateOrderDto } from './dtos/UpdateOrder.dto';
 
 @Injectable()
 export class OrderService {
@@ -69,6 +70,15 @@ export class OrderService {
     return this.responseMapper.toResponse(
       order.id,
       'Order created successfully',
+    );
+  }
+
+  public async update(uuid: string, dto: UpdateOrderDto): Promise<ResponseDto> {
+    const order = await this.findOrderById(uuid);
+    await this.orderRepository.update(order.id, dto);
+    return this.responseMapper.toResponse(
+      order.id,
+      'Order status updated successfully',
     );
   }
 
