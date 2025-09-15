@@ -1,4 +1,4 @@
-import { OrderEntity } from 'src/modules/order/entities/order.entity';
+import { CartEntity } from 'src/modules/cart/entities/cart.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'users' })
@@ -15,6 +15,6 @@ export class UserEntity {
   @Column({ length: 255, nullable: false, select: false })
   password: string;
 
-  @OneToMany(() => OrderEntity, (order) => order.user)
-  orders: OrderEntity[];
+  @OneToMany(() => CartEntity, (cart) => cart.user)
+  carts: CartEntity[];
 }

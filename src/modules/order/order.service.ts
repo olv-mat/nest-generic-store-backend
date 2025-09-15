@@ -6,7 +6,6 @@ import { In, Repository } from 'typeorm';
 import { ProductEntity } from '../product/entities/product.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { CreateOrderDto } from './dtos/CreateOrder.dto';
-import { OrderItemEntity } from './entities/order-item.entity';
 import { OrderEntity } from './entities/order.entity';
 import { UpdateOrderDto } from './dtos/UpdateOrder.dto';
 import { OrderStatus } from './enums/order-status.enum';
@@ -44,34 +43,31 @@ export class OrderService {
       8. Return a Standardized Response With Order Uuid And Success Message
     */
 
-    const user = await this.userRepository.findOneByOrFail({ id: dto.user });
-    const items = dto.items;
-    const products = await this.productRepository.findBy({
-      id: In(items.map((i) => i.product)),
-    });
-    const productMap = new Map(products.map((p) => [p.id, p]));
-    const orderItems = items.map(
-      (item) =>
-        ({
-          product: productMap.get(item.product)!,
-          quantity: item.quantity,
-        }) as OrderItemEntity,
-    );
-    const totalPrice = orderItems
-      .reduce(
-        (sum, item) => sum + Number(item.product.price) * item.quantity,
-        0,
-      )
-      .toFixed(2);
-    const order = await this.orderRepository.save({
-      user: user,
-      items: orderItems,
-      totalPrice: totalPrice,
-    });
-    return this.responseMapper.toResponse(
-      order.id,
-      'Order created successfully',
-    );
+    // const user = await this.userRepository.findOneByOrFail({ id: dto.user });
+    // const items = dto.items;
+    // const products = await this.productRepository.findBy({
+    //   id: In(items.map((i) => i.product)),
+    // });
+    // const productMap = new Map(products.map((p) => [p.id, p]));
+    // const orderItems = items.map(
+    //   (item) =>
+    //     ({
+    //       product: productMap.get(item.product)!,
+    //       quantity: item.quantity,
+    //     }) as OrderItemEntity,
+    // );
+    // const totalPrice = orderItems
+    //   .reduce(
+    //     (sum, item) => sum + Number(item.product.price) * item.quantity,
+    //     0,
+    //   )
+    //   .toFixed(2);
+    // const order = await this.orderRepository.save({
+    //   user: user,
+    //   items: orderItems,
+    //   totalPrice: totalPrice,
+    // });
+    return this.responseMapper.toResponse('', 'Order created successfully');
   }
 
   public async update(uuid: string, dto: UpdateOrderDto): Promise<ResponseDto> {

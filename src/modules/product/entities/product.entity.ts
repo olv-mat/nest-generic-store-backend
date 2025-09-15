@@ -26,7 +26,7 @@ export class ProductEntity {
 
   @ManyToOne(() => CategoryEntity, (category) => category.products, {
     eager: true,
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'category_id' })
   category: CategoryEntity;
@@ -35,11 +35,11 @@ export class ProductEntity {
   price: string;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: string;
+  createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: string;
+  updatedAt: Date;
 
   @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: string;
+  deletedAt: Date;
 }

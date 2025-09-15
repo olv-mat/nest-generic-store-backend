@@ -6,7 +6,7 @@ export class CategoryEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ length: 100, nullable: false })
+  @Column({ length: 255, nullable: false })
   category: string;
 
   @OneToMany(() => ProductEntity, (product) => product.category)
