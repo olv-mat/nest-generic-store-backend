@@ -8,9 +8,9 @@ import { ProductEntity } from 'src/modules/product/entities/product.entity';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
 
 /* 
-npm install @nestjs/typeorm typeorm
-npm install @nestjs/config
-npm install pg
+  npm install @nestjs/typeorm typeorm
+  npm install @nestjs/config
+  npm install pg
 */
 
 @Injectable()

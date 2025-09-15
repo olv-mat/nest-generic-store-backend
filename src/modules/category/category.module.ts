@@ -5,9 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoryEntity } from './entities/category.entity';
 import { ResponseMapper } from '../../common/mappers/response.mapper';
 
-/*
-nest generate resource <resource>
-*/
+// nest generate resource <resource>
 
 @Module({
   imports: [TypeOrmModule.forFeature([CategoryEntity])],

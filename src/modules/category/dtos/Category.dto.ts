@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, Matches, MaxLength } from 'class-validator';
 
-/* npm install class-validator class-transformer */
+// npm install class-validator class-transformer
 
 export class CategoryDto {
   @IsString()

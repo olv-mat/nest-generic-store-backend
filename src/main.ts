@@ -5,8 +5,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 
 /*
-npx @nestjs/cli new <project>
-cd <project>
+  npx @nestjs/cli new <project>
+  cd <project>
 */
 
 async function bootstrap() {
