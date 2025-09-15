@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ResponseDto } from 'src/common/dtos/Response.dto';
 import { CreateProductDto } from './dtos/CreateProduct.dto';
@@ -13,7 +14,9 @@ import { UpdateProductDto } from './dtos/UpdateProduct.dto';
 import { UuidDto } from '../../common/dtos/Uuid.dto';
 import { ProductEntity } from './entities/product.entity';
 import { ProductService } from './product.service';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
