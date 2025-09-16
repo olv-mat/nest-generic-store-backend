@@ -62,7 +62,7 @@ export class ProductService {
     );
   }
 
-  private async findProductById(uuid: string): Promise<ProductEntity> {
+  public async findProductById(uuid: string): Promise<ProductEntity> {
     const product = await this.productRepository.findOne({
       where: { id: uuid },
     });

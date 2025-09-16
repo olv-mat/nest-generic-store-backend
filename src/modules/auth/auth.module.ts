@@ -10,6 +10,7 @@ import { AuthResponseMapper } from './mappers/auth-response.mapper';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { CartService } from '../cart/cart.service';
 import { CartEntity } from '../cart/entities/cart.entity';
+import { CartModule } from '../cart/cart.module';
 
 /* 
   npm install @nestjs/passport passport @nestjs/jwt passport-jwt
@@ -28,8 +29,9 @@ import { CartEntity } from '../cart/entities/cart.entity';
       }),
     }),
     TypeOrmModule.forFeature([UserEntity, CartEntity]),
+    CartModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, CartService, JwtStrategy, AuthResponseMapper],
+  providers: [AuthService, JwtStrategy, AuthResponseMapper],
 })
 export class AuthModule {}

@@ -16,7 +16,7 @@ import { ResponseDto } from 'src/common/dtos/Response.dto';
 import { UpdateUserDto } from './dtos/UpdateUser.dto';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

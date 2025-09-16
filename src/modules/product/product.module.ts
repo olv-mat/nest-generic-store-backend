@@ -11,5 +11,6 @@ import { CategoryExistsConstraint } from './validators/category-exists.constrain
   imports: [TypeOrmModule.forFeature([ProductEntity, CategoryEntity])],
   controllers: [ProductController],
   providers: [ProductService, ResponseMapper, CategoryExistsConstraint],
+  exports: [ProductService],
 })
 export class ProductModule {}

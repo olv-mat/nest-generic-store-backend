@@ -19,7 +19,7 @@ export class CartItemEntity {
   @JoinColumn({ name: 'cart_id' })
   cart: CartEntity;
 
-  @ManyToOne(() => ProductEntity)
+  @ManyToOne(() => ProductEntity, { eager: true })
   @JoinColumn({ name: 'product_id' })
   product: ProductEntity;
 
