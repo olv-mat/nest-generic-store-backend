@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 
-export function sanitizeUpdatePayload(obj: any): any {
+export function validateUpdatePayload(obj: any): any {
   const cleaned: any = {};
 
   for (const key in obj) {

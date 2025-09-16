@@ -1,17 +1,16 @@
-import * as bcrypt from 'bcrypt';
 import {
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { ResponseDto } from 'src/common/dtos/Response.dto';
 import { ResponseMapper } from 'src/common/mappers/response.mapper';
+import { validateUpdatePayload } from 'src/common/utils/validate-update-payload.util';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dtos/CreateUser.dto';
 import { UpdateUserDto } from './dtos/UpdateUser.dto';
 import { UserEntity } from './entities/user.entity';
-import { sanitizeUpdatePayload } from 'src/common/utils/sanitize-update-payload.util';
 
 @Injectable()
 export class UserService {
@@ -29,28 +28,19 @@ export class UserService {
     return await this.findUserById(uuid);
   }
 
-  public async create(dto: CreateUserDto): Promise<ResponseDto> {
-    /*
-      npm install bcrypt
-      npm install -D @types/bcrypt
-    */
-
-    await this.checkUserExists(dto.email);
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
-    const user = await this.userRepository.save({
-      ...dto,
-      password: hashedPassword,
-    });
-    return this.responseMapper.toResponse(user.id, 'User created successfully');
-  }
-
   public async update(uuid: string, dto: UpdateUserDto): Promise<ResponseDto> {
     const user = await this.findUserById(uuid);
-    const updateData = sanitizeUpdatePayload(dto);
-    if (dto.password) {
-      updateData.password = await bcrypt.hash(dto.password, 10);
+    const updatePayload = validateUpdatePayload(dto);
+
+    if (updatePayload.email) {
+      await this.validateEmail(updatePayload.email);
     }
-    await this.userRepository.update(user.id, updateData);
+
+    if (updatePayload.password) {
+      updatePayload.password = await bcrypt.hash(updatePayload.password, 10);
+    }
+
+    await this.userRepository.update(user.id, updatePayload);
     return this.responseMapper.toResponse(user.id, 'User updated successfully');
   }
 
@@ -68,10 +58,10 @@ export class UserService {
     return user;
   }
 
-  private async checkUserExists(email: string): Promise<void> {
+  private async validateEmail(email: string): Promise<void> {
     const user = await this.userRepository.findOne({ where: { email: email } });
     if (user) {
-      throw new ConflictException('User already exists');
+      throw new ConflictException('Email already in use');
     }
   }
 }

@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { UpdateProductDto } from './dtos/UpdateProduct.dto';
 import { ProductEntity } from './entities/product.entity';
-import { sanitizeUpdatePayload } from 'src/common/utils/sanitize-update-payload.util';
+import { validateUpdatePayload } from 'src/common/utils/validate-update-payload.util';
 
 @Injectable()
 export class ProductService {
@@ -45,11 +45,11 @@ export class ProductService {
     dto: UpdateProductDto,
   ): Promise<ResponseDto> {
     const product = await this.findProductById(uuid);
-    const updateData = sanitizeUpdatePayload(dto);
+    const payload = validateUpdatePayload(dto);
     if (dto.category) {
-      updateData.categoryId = { id: dto.category };
+      payload.categoryId = { id: dto.category };
     }
-    await this.productRepository.update(product.id, updateData);
+    await this.productRepository.update(product.id, payload);
     return this.responseMapper.toResponse(uuid, 'Product updated successfully');
   }
 
