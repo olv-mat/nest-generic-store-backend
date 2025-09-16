@@ -8,6 +8,8 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { AuthResponseMapper } from './mappers/auth-response.mapper';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { CartService } from '../cart/cart.service';
+import { CartEntity } from '../cart/entities/cart.entity';
 
 /* 
   npm install @nestjs/passport passport @nestjs/jwt passport-jwt
@@ -25,9 +27,9 @@ import { JwtStrategy } from './strategies/jwt.strategy';
         signOptions: { expiresIn: '1h' },
       }),
     }),
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([UserEntity, CartEntity]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, AuthResponseMapper],
+  providers: [AuthService, CartService, JwtStrategy, AuthResponseMapper],
 })
 export class AuthModule {}

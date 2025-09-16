@@ -10,9 +10,10 @@ export class AuthResponseMapper {
 
   public toRegisterResponse(
     token: string,
-    uuid: string,
+    userId: string,
+    cartId: string,
     message: string,
   ): RegisterResponseDto {
-    return new RegisterResponseDto(token, uuid, message);
+    return new RegisterResponseDto(token, userId, cartId, message);
   }
 }

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CartEntity } from './entities/cart.entity';
 import { Repository } from 'typeorm';
+import { UserEntity } from '../user/entities/user.entity';
 
 @Injectable()
 export class CartService {
@@ -16,6 +17,12 @@ export class CartService {
 
   public async findOne(uuid: string): Promise<CartEntity> {
     return await this.findCartById(uuid);
+  }
+
+  public async createCart(user: UserEntity) {
+    return await this.cartRepository.save({
+      user: user,
+    });
   }
 
   private async findCartById(uuid: string): Promise<CartEntity> {

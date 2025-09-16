@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
+import { CartService } from '../cart/cart.service';
 import { UserEntity } from '../user/entities/user.entity';
 import { LoginDto } from './dto/Login.dto';
 import { LoginResponseDto } from './dto/LoginResponse.dto';
@@ -21,6 +22,7 @@ export class AuthService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly authResponseMapper: AuthResponseMapper,
+    private readonly cartService: CartService,
   ) {}
 
   public async login(dto: LoginDto): Promise<LoginResponseDto> {
@@ -43,9 +45,11 @@ export class AuthService {
       password: hashedPassword,
     });
     const token = this.generateToken(user);
+    const cart = await this.cartService.createCart(user);
     return this.authResponseMapper.toRegisterResponse(
       token,
       user.id,
+      cart.id,
       'User created successfully',
     );
   }
