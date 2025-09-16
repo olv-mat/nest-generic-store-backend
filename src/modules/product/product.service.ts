@@ -45,11 +45,8 @@ export class ProductService {
     dto: UpdateProductDto,
   ): Promise<ResponseDto> {
     const product = await this.findProductById(uuid);
-    const payload = validateUpdatePayload(dto);
-    if (dto.category) {
-      payload.categoryId = { id: dto.category };
-    }
-    await this.productRepository.update(product.id, payload);
+    const updatePayload = validateUpdatePayload(dto);
+    await this.productRepository.update(product.id, updatePayload);
     return this.responseMapper.toResponse(uuid, 'Product updated successfully');
   }
 

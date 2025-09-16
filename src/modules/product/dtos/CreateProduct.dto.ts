@@ -9,12 +9,11 @@ export class CreateProductDto {
   product: string;
 
   @IsNotEmpty()
-  @IsString()
-  @MaxLength(255)
-  @Matches(/\S/, { message: 'price cannot contain only spaces' })
-  price: string;
-
-  @IsNotEmpty()
   @CategoryExists({ message: 'this category does not exist' })
   category: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Matches(/\S/, { message: 'price cannot contain only spaces' })
+  price: string;
 }

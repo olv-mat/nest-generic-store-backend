@@ -17,13 +17,13 @@ export class UpdateProductDto {
 
   @IsOptional()
   @IsNotEmpty()
+  @CategoryExists({ message: 'this category does not exist' })
+  category?: string;
+
+  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   @MaxLength(255)
   @Matches(/\S/, { message: 'price cannot contain only spaces' })
   price?: string;
-
-  @IsOptional()
-  @IsNotEmpty()
-  @CategoryExists({ message: 'this category does not exist' })
-  category?: string;
 }
