@@ -7,7 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
-import { CartService } from '../cart/cart.service';
+import { CartService } from '../cart/services/cart.service';
 import { UserEntity } from '../user/entities/user.entity';
 import { LoginDto } from './dto/Login.dto';
 import { LoginResponseDto } from './dto/LoginResponse.dto';

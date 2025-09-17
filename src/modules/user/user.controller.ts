@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ResponseDto } from 'src/common/dtos/Response.dto';
+import { DefaultResponseDto } from 'src/common/dtos/DefaultResponse.dto';
 import { UuidDto } from 'src/common/dtos/Uuid.dto';
 import { UpdateUserDto } from './dtos/UpdateUser.dto';
 import { UserEntity } from './entities/user.entity';
@@ -33,12 +33,12 @@ export class UserController {
   public async update(
     @Param() { uuid }: UuidDto,
     @Body() dto: UpdateUserDto,
-  ): Promise<ResponseDto> {
+  ): Promise<DefaultResponseDto> {
     return await this.userService.update(uuid, dto);
   }
 
   @Delete(':uuid')
-  public async delete(@Param() { uuid }: UuidDto): Promise<ResponseDto> {
+  public async delete(@Param() { uuid }: UuidDto): Promise<DefaultResponseDto> {
     return await this.userService.delete(uuid);
   }
 }

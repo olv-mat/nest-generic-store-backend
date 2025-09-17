@@ -3,14 +3,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CartModule } from '../cart/cart.module';
+import { CartEntity } from '../cart/entities/cart.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { AuthResponseMapper } from './mappers/auth-response.mapper';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { CartService } from '../cart/cart.service';
-import { CartEntity } from '../cart/entities/cart.entity';
-import { CartModule } from '../cart/cart.module';
 
 /* 
   npm install @nestjs/passport passport @nestjs/jwt passport-jwt

@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { ResponseDto } from 'src/common/dtos/Response.dto';
+import { DefaultResponseDto } from 'src/common/dtos/DefaultResponse.dto';
 import { ResponseMapper } from 'src/common/mappers/response.mapper';
 import { validateUpdatePayload } from 'src/common/utils/validate-update-payload.util';
 import { Repository } from 'typeorm';
@@ -28,7 +28,10 @@ export class UserService {
     return await this.findUserById(uuid);
   }
 
-  public async update(uuid: string, dto: UpdateUserDto): Promise<ResponseDto> {
+  public async update(
+    uuid: string,
+    dto: UpdateUserDto,
+  ): Promise<DefaultResponseDto> {
     const user = await this.findUserById(uuid);
     const updatePayload = validateUpdatePayload(dto);
 
@@ -44,7 +47,7 @@ export class UserService {
     return this.responseMapper.toResponse(user.id, 'User updated successfully');
   }
 
-  public async delete(uuid: string): Promise<ResponseDto> {
+  public async delete(uuid: string): Promise<DefaultResponseDto> {
     const user = await this.findUserById(uuid);
     await this.userRepository.delete(user.id);
     return this.responseMapper.toResponse(user.id, 'User deleted successfully');

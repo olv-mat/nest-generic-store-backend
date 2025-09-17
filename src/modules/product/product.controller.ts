@@ -8,13 +8,13 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ResponseDto } from 'src/common/dtos/Response.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { DefaultResponseDto } from 'src/common/dtos/DefaultResponse.dto';
+import { UuidDto } from '../../common/dtos/Uuid.dto';
 import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { UpdateProductDto } from './dtos/UpdateProduct.dto';
-import { UuidDto } from '../../common/dtos/Uuid.dto';
 import { ProductEntity } from './entities/product.entity';
 import { ProductService } from './product.service';
-import { AuthGuard } from '@nestjs/passport';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('products')
@@ -32,7 +32,9 @@ export class ProductController {
   }
 
   @Post()
-  public async create(@Body() dto: CreateProductDto): Promise<ResponseDto> {
+  public async create(
+    @Body() dto: CreateProductDto,
+  ): Promise<DefaultResponseDto> {
     return await this.productService.create(dto);
   }
 
@@ -40,12 +42,12 @@ export class ProductController {
   public async update(
     @Param() { uuid }: UuidDto,
     @Body() dto: UpdateProductDto,
-  ): Promise<ResponseDto> {
+  ): Promise<DefaultResponseDto> {
     return await this.productService.update(uuid, dto);
   }
 
   @Delete(':uuid')
-  public async delete(@Param() { uuid }: UuidDto): Promise<ResponseDto> {
+  public async delete(@Param() { uuid }: UuidDto): Promise<DefaultResponseDto> {
     return await this.productService.delete(uuid);
   }
 }

@@ -4,13 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ResponseDto } from 'src/common/dtos/Response.dto';
+import { DefaultResponseDto } from 'src/common/dtos/DefaultResponse.dto';
 import { ResponseMapper } from 'src/common/mappers/response.mapper';
+import { validateUpdatePayload } from 'src/common/utils/validate-update-payload.util';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { UpdateProductDto } from './dtos/UpdateProduct.dto';
 import { ProductEntity } from './entities/product.entity';
-import { validateUpdatePayload } from 'src/common/utils/validate-update-payload.util';
 
 @Injectable()
 export class ProductService {
@@ -28,7 +28,7 @@ export class ProductService {
     return await this.findProductById(uuid);
   }
 
-  public async create(dto: CreateProductDto): Promise<ResponseDto> {
+  public async create(dto: CreateProductDto): Promise<DefaultResponseDto> {
     await this.checkProductExists(dto.product);
     const product = await this.productRepository.save({
       ...dto,
@@ -43,14 +43,14 @@ export class ProductService {
   public async update(
     uuid: string,
     dto: UpdateProductDto,
-  ): Promise<ResponseDto> {
+  ): Promise<DefaultResponseDto> {
     const product = await this.findProductById(uuid);
     const updatePayload = validateUpdatePayload(dto);
     await this.productRepository.update(product.id, updatePayload);
     return this.responseMapper.toResponse(uuid, 'Product updated successfully');
   }
 
-  public async delete(uuid: string): Promise<ResponseDto> {
+  public async delete(uuid: string): Promise<DefaultResponseDto> {
     const product = await this.findProductById(uuid);
     await this.productRepository.softDelete({ id: product.id });
     return this.responseMapper.toResponse(

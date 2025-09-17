@@ -1,8 +1,8 @@
 export class RegisterResponseDto {
   constructor(
     public token: string,
-    public userId: string,
-    public cartId: string,
+    public user: string,
+    public cart: string,
     public message: string,
   ) {}
 }

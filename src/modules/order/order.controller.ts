@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ResponseDto } from 'src/common/dtos/Response.dto';
+import { DefaultResponseDto } from 'src/common/dtos/DefaultResponse.dto';
 import { UuidDto } from 'src/common/dtos/Uuid.dto';
 import { CreateOrderDto } from './dtos/CreateOrder.dto';
 import { OrderEntity } from './entities/order.entity';
@@ -22,7 +22,9 @@ export class OrderController {
   }
 
   @Post()
-  public async create(@Body() dto: CreateOrderDto): Promise<ResponseDto> {
+  public async create(
+    @Body() dto: CreateOrderDto,
+  ): Promise<DefaultResponseDto> {
     return this.orderService.create(dto);
   }
 }

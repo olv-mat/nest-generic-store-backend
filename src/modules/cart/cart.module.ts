@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ResponseMapper } from 'src/common/mappers/response.mapper';
 import { ProductModule } from '../product/product.module';
 import { CartController } from './cart.controller';
-import { CartService } from './cart.service';
-import { CartEntity } from './entities/cart.entity';
 import { CartItemEntity } from './entities/cart-item.entity';
+import { CartEntity } from './entities/cart.entity';
+import { CartItemService } from './services/cart-item.service';
+import { CartService } from './services/cart.service';
 
 @Module({
   imports: [
@@ -12,7 +14,7 @@ import { CartItemEntity } from './entities/cart-item.entity';
     ProductModule,
   ],
   controllers: [CartController],
-  providers: [CartService],
+  providers: [CartService, CartItemService, ResponseMapper],
   exports: [CartService],
 })
 export class CartModule {}

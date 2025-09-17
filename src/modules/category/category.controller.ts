@@ -9,11 +9,11 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ResponseDto } from '../../common/dtos/Response.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { DefaultResponseDto } from '../../common/dtos/DefaultResponse.dto';
 import { CategoryService } from './category.service';
 import { CategoryDto } from './dtos/Category.dto';
 import { CategoryEntity } from './entities/category.entity';
-import { AuthGuard } from '@nestjs/passport';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('categories')
@@ -33,7 +33,7 @@ export class CategoryController {
   }
 
   @Post()
-  public async create(@Body() dto: CategoryDto): Promise<ResponseDto> {
+  public async create(@Body() dto: CategoryDto): Promise<DefaultResponseDto> {
     return await this.categoryService.create(dto);
   }
 
@@ -41,14 +41,14 @@ export class CategoryController {
   public async update(
     @Param('uuid', new ParseUUIDPipe()) uuid: string,
     @Body() dto: CategoryDto,
-  ): Promise<ResponseDto> {
+  ): Promise<DefaultResponseDto> {
     return await this.categoryService.update(uuid, dto);
   }
 
   @Delete(':uuid')
   public async delete(
     @Param('uuid', new ParseUUIDPipe()) uuid: string,
-  ): Promise<ResponseDto> {
+  ): Promise<DefaultResponseDto> {
     return await this.categoryService.delete(uuid);
   }
 }

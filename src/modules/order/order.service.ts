@@ -4,11 +4,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ResponseDto } from 'src/common/dtos/Response.dto';
+import { DefaultResponseDto } from 'src/common/dtos/DefaultResponse.dto';
 import { ResponseMapper } from 'src/common/mappers/response.mapper';
 import { Repository } from 'typeorm';
-import { CartService } from '../cart/cart.service';
 import { CartStatus } from '../cart/enums/cart-status.enum';
+import { CartService } from '../cart/services/cart.service';
 import { CreateOrderDto } from './dtos/CreateOrder.dto';
 import { OrderEntity } from './entities/order.entity';
 
@@ -29,7 +29,7 @@ export class OrderService {
     return this.findOrderById(uuid);
   }
 
-  public async create(dto: CreateOrderDto): Promise<ResponseDto> {
+  public async create(dto: CreateOrderDto): Promise<DefaultResponseDto> {
     const cart = await this.cartService.findCartById(dto.cart);
 
     if (cart.status !== CartStatus.OPEN) {

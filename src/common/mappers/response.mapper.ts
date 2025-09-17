@@ -1,9 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { ResponseDto } from '../dtos/Response.dto';
+import { DefaultResponseDto } from '../dtos/DefaultResponse.dto';
+import { MessageResponseDto } from '../dtos/MessageResponse.dto';
 
 @Injectable()
 export class ResponseMapper {
-  public toResponse(uuid: string, message: string): ResponseDto {
-    return new ResponseDto(uuid, message);
+  public toResponse(uuid: string, message: string): DefaultResponseDto {
+    return new DefaultResponseDto(uuid, message);
+  }
+
+  public toMessageResponse(message: string): MessageResponseDto {
+    return new MessageResponseDto(message);
   }
 }
