@@ -1,24 +1,23 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ResponseDto } from 'src/common/dtos/Response.dto';
 import { ResponseMapper } from 'src/common/mappers/response.mapper';
-import { In, Repository } from 'typeorm';
-import { ProductEntity } from '../product/entities/product.entity';
-import { UserEntity } from '../user/entities/user.entity';
+import { Repository } from 'typeorm';
+import { CartService } from '../cart/cart.service';
+import { CartStatus } from '../cart/enums/cart-status.enum';
 import { CreateOrderDto } from './dtos/CreateOrder.dto';
 import { OrderEntity } from './entities/order.entity';
-import { UpdateOrderDto } from './dtos/UpdateOrder.dto';
-import { OrderStatus } from './enums/order-status.enum';
 
 @Injectable()
 export class OrderService {
   constructor(
     @InjectRepository(OrderEntity)
     private readonly orderRepository: Repository<OrderEntity>,
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
-    @InjectRepository(ProductEntity)
-    private readonly productRepository: Repository<ProductEntity>,
+    private readonly cartService: CartService,
     private readonly responseMapper: ResponseMapper,
   ) {}
 
@@ -31,63 +30,29 @@ export class OrderService {
   }
 
   public async create(dto: CreateOrderDto): Promise<ResponseDto> {
-    /* 
-      Steps:
-      1. Find The User Who Is Placing The Order (Throws If Not Found)
-      2. Extract Items From The Request Dto (Contains Product Uuid And Quantity)
-      3. Load All Products Referenced In The Order With a Single Query (Returns Product Entities)
-      4. Build a Map For Quick Product Lookup By Uuid (Uuid => ProductEntity)
-      5. Create Order Items Linking Each Dto Item To The Actual Product Entity (Contains ProductEntity And Quantity)
-      6. Calculate The Total Price Of The Order With Two Decimal Places
-      7. Save The New Order In The Database
-      8. Return a Standardized Response With Order Uuid And Success Message
-    */
+    const cart = await this.cartService.findCartById(dto.cart);
 
-    // const user = await this.userRepository.findOneByOrFail({ id: dto.user });
-    // const items = dto.items;
-    // const products = await this.productRepository.findBy({
-    //   id: In(items.map((i) => i.product)),
-    // });
-    // const productMap = new Map(products.map((p) => [p.id, p]));
-    // const orderItems = items.map(
-    //   (item) =>
-    //     ({
-    //       product: productMap.get(item.product)!,
-    //       quantity: item.quantity,
-    //     }) as OrderItemEntity,
-    // );
-    // const totalPrice = orderItems
-    //   .reduce(
-    //     (sum, item) => sum + Number(item.product.price) * item.quantity,
-    //     0,
-    //   )
-    //   .toFixed(2);
-    // const order = await this.orderRepository.save({
-    //   user: user,
-    //   items: orderItems,
-    //   totalPrice: totalPrice,
-    // });
-    return this.responseMapper.toResponse('', 'Order created successfully');
-  }
+    if (cart.status !== CartStatus.OPEN) {
+      throw new BadRequestException('Cart not available for order');
+    }
 
-  public async update(uuid: string, dto: UpdateOrderDto): Promise<ResponseDto> {
-    const order = await this.findOrderById(uuid);
-    await this.orderRepository.update(order.id, dto);
-    return this.responseMapper.toResponse(
-      order.id,
-      'Order status updated successfully',
-    );
-  }
+    const total_price = cart.items
+      .reduce((acc, item) => {
+        const price = Number(item.product.price);
+        return acc + price * item.quantity;
+      }, 0)
+      .toFixed(2);
 
-  public async delete(uuid: string): Promise<ResponseDto> {
-    const order = await this.findOrderById(uuid);
-    await this.orderRepository.update(order.id, {
-      status: OrderStatus.CANCELED,
+    const order = await this.orderRepository.save({
+      cart: cart,
+      totalPrice: total_price,
     });
-    await this.orderRepository.softDelete(order.id);
+
+    await this.cartService.closeCart(cart);
+
     return this.responseMapper.toResponse(
       order.id,
-      'Order deleted successfully',
+      'Order created successfully',
     );
   }
 

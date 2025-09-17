@@ -6,6 +6,7 @@ import { UserEntity } from '../user/entities/user.entity';
 import { AddItemDto } from './dtos/AddItem.dto';
 import { CartEntity } from './entities/cart.entity';
 import { CartItemEntity } from './entities/cart-item.entity';
+import { CartStatus } from './enums/cart-status.enum';
 
 @Injectable()
 export class CartService {
@@ -42,7 +43,11 @@ export class CartService {
     return 'Item successfully added to cart';
   }
 
-  private async findCartById(uuid: string): Promise<CartEntity> {
+  public async closeCart(cart: CartEntity) {
+    await this.cartRepository.update(cart.id, { status: CartStatus.CLOSED });
+  }
+
+  public async findCartById(uuid: string): Promise<CartEntity> {
     const cart = await this.cartRepository.findOne({ where: { id: uuid } });
     if (!cart) {
       throw new NotFoundException('Cart not found');
