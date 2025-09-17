@@ -5,7 +5,7 @@ import { IsNotEmpty, IsString, Matches, MaxLength } from 'class-validator';
 export class CategoryDto {
   @IsString()
   @IsNotEmpty()
-  @MaxLength(100)
+  @MaxLength(255)
   @Matches(/\S/, { message: 'category cannot contain only spaces' })
   category: string;
 }
