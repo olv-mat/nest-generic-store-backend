@@ -34,7 +34,7 @@ export class ProductService {
       ...dto,
       category: { id: dto.category },
     });
-    return this.responseMapper.toResponse(
+    return this.responseMapper.toDefaultResponse(
       product.id,
       'Product created successfully',
     );
@@ -47,13 +47,16 @@ export class ProductService {
     const product = await this.findProductById(uuid);
     const updatePayload = validateUpdatePayload(dto);
     await this.productRepository.update(product.id, updatePayload);
-    return this.responseMapper.toResponse(uuid, 'Product updated successfully');
+    return this.responseMapper.toDefaultResponse(
+      uuid,
+      'Product updated successfully',
+    );
   }
 
   public async delete(uuid: string): Promise<DefaultResponseDto> {
     const product = await this.findProductById(uuid);
     await this.productRepository.softDelete({ id: product.id });
-    return this.responseMapper.toResponse(
+    return this.responseMapper.toDefaultResponse(
       product.id,
       'Product deleted successfully',
     );

@@ -7,15 +7,12 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
-  UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { DefaultResponseDto } from '../../common/dtos/DefaultResponse.dto';
 import { CategoryService } from './category.service';
 import { CategoryDto } from './dtos/Category.dto';
 import { CategoryEntity } from './entities/category.entity';
 
-@UseGuards(AuthGuard('jwt'))
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}

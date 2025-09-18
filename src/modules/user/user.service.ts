@@ -44,13 +44,19 @@ export class UserService {
     }
 
     await this.userRepository.update(user.id, updatePayload);
-    return this.responseMapper.toResponse(user.id, 'User updated successfully');
+    return this.responseMapper.toDefaultResponse(
+      user.id,
+      'User updated successfully',
+    );
   }
 
   public async delete(uuid: string): Promise<DefaultResponseDto> {
     const user = await this.findUserById(uuid);
     await this.userRepository.delete(user.id);
-    return this.responseMapper.toResponse(user.id, 'User deleted successfully');
+    return this.responseMapper.toDefaultResponse(
+      user.id,
+      'User deleted successfully',
+    );
   }
 
   public async findUserById(uuid: string): Promise<UserEntity> {

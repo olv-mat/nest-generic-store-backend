@@ -19,7 +19,7 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
-  // Enable NestJS Dependency Injection Inside "class-validator" Constraints
+  // Enable NestJS Dependency Injection Inside 'class-validator' Constraints
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   await app.listen(process.env.PORT ?? 3000);
 }

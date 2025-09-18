@@ -4,7 +4,7 @@ import { MessageResponseDto } from '../dtos/MessageResponse.dto';
 
 @Injectable()
 export class ResponseMapper {
-  public toResponse(uuid: string, message: string): DefaultResponseDto {
+  public toDefaultResponse(uuid: string, message: string): DefaultResponseDto {
     return new DefaultResponseDto(uuid, message);
   }
 

@@ -1,20 +1,18 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { DefaultResponseDto } from 'src/common/dtos/DefaultResponse.dto';
 import { UuidDto } from 'src/common/dtos/Uuid.dto';
 import { CreateOrderDto } from './dtos/CreateOrder.dto';
 import { OrderEntity } from './entities/order.entity';
 import { OrderService } from './order.service';
 
-@UseGuards(AuthGuard('jwt'))
 @Controller('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
@@ -36,8 +34,13 @@ export class OrderController {
     return this.orderService.create(dto);
   }
 
-  @Patch(':uuid/complete')
-  public async complete(@Param() { uuid }: UuidDto) {
-    return this.orderService.complete(uuid);
+  @Post(':uuid/pay')
+  public async pay(@Param() { uuid }: UuidDto): Promise<DefaultResponseDto> {
+    return this.orderService.pay(uuid);
+  }
+
+  @Delete(':uuid')
+  public async delete(@Param() { uuid }: UuidDto): Promise<DefaultResponseDto> {
+    return await this.orderService.delete(uuid);
   }
 }

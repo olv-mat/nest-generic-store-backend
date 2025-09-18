@@ -2,7 +2,6 @@ import { CartEntity } from 'src/modules/cart/entities/cart.entity';
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   OneToOne,
@@ -35,7 +34,4 @@ export class OrderEntity {
 
   @UpdateDateColumn({ name: 'updated_at', select: false })
   updatedAt: Date;
-
-  @DeleteDateColumn({ name: 'deleted_at', select: false })
-  deletedAt: Date;
 }

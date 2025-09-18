@@ -18,6 +18,7 @@ export class CartEntity {
   id: string;
 
   @ManyToOne(() => UserEntity, (user) => user.carts, {
+    onDelete: 'CASCADE',
     eager: true,
   })
   @JoinColumn({ name: 'user_id' })

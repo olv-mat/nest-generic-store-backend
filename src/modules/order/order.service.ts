@@ -9,10 +9,10 @@ import { ResponseMapper } from 'src/common/mappers/response.mapper';
 import { Repository } from 'typeorm';
 import { CartStatus } from '../cart/enums/cart-status.enum';
 import { CartService } from '../cart/services/cart.service';
+import { UserService } from '../user/user.service';
 import { CreateOrderDto } from './dtos/CreateOrder.dto';
 import { OrderEntity } from './entities/order.entity';
 import { OrderStatus } from './enums/order-status.enum';
-import { UserService } from '../user/user.service';
 
 @Injectable()
 export class OrderService {
@@ -39,6 +39,10 @@ export class OrderService {
       throw new BadRequestException('Cart not available for order');
     }
 
+    if (cart.items.length === 0) {
+      throw new BadRequestException('Cart must contain at least one product');
+    }
+
     const total_price = cart.items
       .reduce((acc, item) => {
         const price = Number(item.product.price);
@@ -53,27 +57,40 @@ export class OrderService {
 
     await this.cartService.changeCartStatus(cart, CartStatus.CLOSED);
 
-    return this.responseMapper.toResponse(
+    return this.responseMapper.toDefaultResponse(
       order.id,
       'Order created successfully',
     );
   }
 
-  public async complete(uuid: string) {
+  public async pay(uuid: string): Promise<DefaultResponseDto> {
     const order = await this.findOrderById(uuid);
     if (order.status !== OrderStatus.PENDING) {
       throw new BadRequestException(
-        'Order cannot be COMPLETED with current status',
+        'Order cannot be updated with current status',
       );
     }
 
     const user = await this.userService.findUserById(order.cart.user.id);
-    await this.orderRepository.update(order.id, {
-      status: OrderStatus.COMPLETED,
-    });
+    await this.orderRepository.update(order.id, { status: OrderStatus.PAID });
     await this.cartService.createCart(user);
-    return this.responseMapper.toMessageResponse(
-      'Order successfully COMPLETED',
+
+    return this.responseMapper.toDefaultResponse(
+      order.id,
+      'Order marked as paid successfully',
+    );
+  }
+
+  public async delete(uuid: string): Promise<DefaultResponseDto> {
+    const order = await this.findOrderById(uuid);
+    const cart = await this.cartService.findCartById(order.cart.id);
+
+    await this.orderRepository.delete(order.id);
+    await this.cartService.changeCartStatus(cart, CartStatus.OPEN);
+
+    return this.responseMapper.toDefaultResponse(
+      order.id,
+      'Order deleted successfully',
     );
   }
 

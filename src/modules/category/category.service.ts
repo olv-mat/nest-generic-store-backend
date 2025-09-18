@@ -29,7 +29,7 @@ export class CategoryService {
   public async create(dto: CategoryDto): Promise<DefaultResponseDto> {
     await this.checkCategoryExists(dto.category);
     const category = await this.categoryRepository.save(dto);
-    return this.responseMapper.toResponse(
+    return this.responseMapper.toDefaultResponse(
       category.id,
       'Category created successfully',
     );
@@ -41,7 +41,7 @@ export class CategoryService {
   ): Promise<DefaultResponseDto> {
     const category = await this.findCategoryById(uuid);
     await this.categoryRepository.update(category.id, dto);
-    return this.responseMapper.toResponse(
+    return this.responseMapper.toDefaultResponse(
       uuid,
       'Category updated successfully',
     );
@@ -50,7 +50,7 @@ export class CategoryService {
   public async delete(uuid: string): Promise<DefaultResponseDto> {
     const category = await this.findCategoryById(uuid);
     await this.categoryRepository.delete(category.id);
-    return this.responseMapper.toResponse(
+    return this.responseMapper.toDefaultResponse(
       uuid,
       'Category deleted successfully',
     );
