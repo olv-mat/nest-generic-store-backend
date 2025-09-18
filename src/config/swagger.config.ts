@@ -9,7 +9,7 @@ import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes';
 
 export function swaggerSetup(app: INestApplication): void {
   const config = new DocumentBuilder()
-    .setTitle('Nest Generic Store Backend')
+    .setTitle('Nest Shopping Cart Backend')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
