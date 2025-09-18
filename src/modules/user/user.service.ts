@@ -53,7 +53,7 @@ export class UserService {
     return this.responseMapper.toResponse(user.id, 'User deleted successfully');
   }
 
-  private async findUserById(uuid: string): Promise<UserEntity> {
+  public async findUserById(uuid: string): Promise<UserEntity> {
     const user = await this.userRepository.findOne({ where: { id: uuid } });
     if (!user) {
       throw new NotFoundException('User not found');

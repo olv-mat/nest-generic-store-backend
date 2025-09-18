@@ -11,6 +11,8 @@ import { CartStatus } from '../cart/enums/cart-status.enum';
 import { CartService } from '../cart/services/cart.service';
 import { CreateOrderDto } from './dtos/CreateOrder.dto';
 import { OrderEntity } from './entities/order.entity';
+import { OrderStatus } from './enums/order-status.enum';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class OrderService {
@@ -18,6 +20,7 @@ export class OrderService {
     @InjectRepository(OrderEntity)
     private readonly orderRepository: Repository<OrderEntity>,
     private readonly cartService: CartService,
+    private readonly userService: UserService,
     private readonly responseMapper: ResponseMapper,
   ) {}
 
@@ -48,7 +51,7 @@ export class OrderService {
       totalPrice: total_price,
     });
 
-    await this.cartService.closeCart(cart);
+    await this.cartService.changeCartStatus(cart, CartStatus.CLOSED);
 
     return this.responseMapper.toResponse(
       order.id,
@@ -56,8 +59,29 @@ export class OrderService {
     );
   }
 
+  public async complete(uuid: string) {
+    const order = await this.findOrderById(uuid);
+    if (order.status !== OrderStatus.PENDING) {
+      throw new BadRequestException(
+        'Order cannot be COMPLETED with current status',
+      );
+    }
+
+    const user = await this.userService.findUserById(order.cart.user.id);
+    await this.orderRepository.update(order.id, {
+      status: OrderStatus.COMPLETED,
+    });
+    await this.cartService.createCart(user);
+    return this.responseMapper.toMessageResponse(
+      'Order successfully COMPLETED',
+    );
+  }
+
   private async findOrderById(uuid: string): Promise<OrderEntity> {
-    const order = await this.orderRepository.findOne({ where: { id: uuid } });
+    const order = await this.orderRepository.findOne({
+      where: { id: uuid },
+      relations: ['cart', 'cart.user'],
+    });
     if (!order) {
       throw new NotFoundException('Order not found');
     }

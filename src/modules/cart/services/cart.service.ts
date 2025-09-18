@@ -26,8 +26,11 @@ export class CartService {
     });
   }
 
-  public async closeCart(cart: CartEntity): Promise<void> {
-    await this.cartRepository.update(cart.id, { status: CartStatus.CLOSED });
+  public async changeCartStatus(
+    cart: CartEntity,
+    status: CartStatus,
+  ): Promise<void> {
+    await this.cartRepository.update(cart.id, { status: status });
   }
 
   public async findCartById(uuid: string): Promise<CartEntity> {

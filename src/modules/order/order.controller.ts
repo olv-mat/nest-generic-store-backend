@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { DefaultResponseDto } from 'src/common/dtos/DefaultResponse.dto';
 import { UuidDto } from 'src/common/dtos/Uuid.dto';
@@ -26,5 +34,10 @@ export class OrderController {
     @Body() dto: CreateOrderDto,
   ): Promise<DefaultResponseDto> {
     return this.orderService.create(dto);
+  }
+
+  @Patch(':uuid/complete')
+  public async complete(@Param() { uuid }: UuidDto) {
+    return this.orderService.complete(uuid);
   }
 }
