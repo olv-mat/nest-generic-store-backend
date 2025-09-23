@@ -7,7 +7,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   // Defines How To Extract And Validate The JWT From Requests
 
-  constructor(private config: ConfigService) {
+  constructor(config: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -16,6 +16,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   public async validate(payload: any) {
-    return { sub: payload.sub, name: payload.name, email: payload.email };
+    return {
+      sub: payload.sub,
+      name: payload.name,
+      email: payload.email,
+      role: payload.role,
+    };
   }
 }
