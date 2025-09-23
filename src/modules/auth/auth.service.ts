@@ -57,7 +57,7 @@ export class AuthService {
   private async findUserByEmail(email: string): Promise<UserEntity> {
     const user = await this.userRepository.findOne({
       where: { email: email },
-      select: ['id', 'name', 'email', 'password'],
+      select: ['id', 'name', 'email', 'password', 'role'],
     });
     if (!user) {
       throw new UnauthorizedException('User not found');

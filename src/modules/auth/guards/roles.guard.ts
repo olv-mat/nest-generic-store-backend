@@ -2,6 +2,7 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
+  Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { UserRoles } from 'src/modules/user/enums/user-roles.enum';
@@ -12,6 +13,7 @@ import { ROLES_KEY } from '../decorators/roles.decorator';
   @Roles() Decorator And Compares It Against The User Role Provided In The JWT Payload.
 */
 
+@Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
