@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { LoginResponseDto } from '../dto/LoginResponse.dto';
-import { RegisterResponseDto } from '../dto/RegisterResponse.dto';
+import { LoginResponseDto } from '../dtos/LoginResponse.dto';
+import { RegisterResponseDto } from '../dtos/RegisterResponse.dto';
 
 @Injectable()
 export class AuthResponseMapper {

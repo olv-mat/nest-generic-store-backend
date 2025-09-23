@@ -9,18 +9,18 @@ import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { CartService } from '../cart/services/cart.service';
 import { UserEntity } from '../user/entities/user.entity';
-import { LoginDto } from './dto/Login.dto';
-import { LoginResponseDto } from './dto/LoginResponse.dto';
-import { RegisterDto } from './dto/Register.dto';
-import { RegisterResponseDto } from './dto/RegisterResponse.dto';
+import { LoginDto } from './dtos/Login.dto';
+import { LoginResponseDto } from './dtos/LoginResponse.dto';
+import { RegisterDto } from './dtos/Register.dto';
+import { RegisterResponseDto } from './dtos/RegisterResponse.dto';
 import { AuthResponseMapper } from './mappers/auth-response.mapper';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private jwtService: JwtService,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    private jwtService: JwtService,
     private readonly authResponseMapper: AuthResponseMapper,
     private readonly cartService: CartService,
   ) {}

@@ -3,10 +3,13 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
+/*
+  Strategy That Extracts The JWT From The Authorization Header, Verifies Its 
+  Validity Using The Secret Key, And Attaches The Decoded Payload To 'req.user'.
+*/
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  // Defines How To Extract And Validate The JWT From Requests
-
   constructor(config: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
