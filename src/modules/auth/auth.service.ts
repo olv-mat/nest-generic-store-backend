@@ -14,6 +14,7 @@ import { LoginResponseDto } from './dtos/LoginResponse.dto';
 import { RegisterDto } from './dtos/Register.dto';
 import { RegisterResponseDto } from './dtos/RegisterResponse.dto';
 import { AuthResponseMapper } from './mappers/auth-response.mapper';
+import { UserInterface } from 'src/common/interfaces/user.interface';
 
 @Injectable()
 export class AuthService {
@@ -73,7 +74,7 @@ export class AuthService {
   }
 
   private generateToken(user: UserEntity): string {
-    const payload = {
+    const payload: UserInterface = {
       sub: user.id,
       name: user.name,
       email: user.email,

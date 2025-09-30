@@ -6,7 +6,9 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { DefaultResponseDto } from 'src/common/dtos/DefaultResponse.dto';
+import { UserInterface } from 'src/common/interfaces/user.interface';
 import { ResponseMapper } from 'src/common/mappers/response.mapper';
+import { checkUserPermission } from 'src/common/utils/check-user-permission.util';
 import { validateUpdatePayload } from 'src/common/utils/validate-update-payload.util';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './dtos/UpdateUser.dto';
@@ -24,15 +26,19 @@ export class UserService {
     return await this.userRepository.find();
   }
 
-  public async findOne(uuid: string): Promise<UserEntity> {
+  public async findOne(user: UserInterface, uuid: string): Promise<UserEntity> {
+    checkUserPermission(user, uuid);
     return await this.findUserById(uuid);
   }
 
   public async update(
+    user: UserInterface,
     uuid: string,
     dto: UpdateUserDto,
   ): Promise<DefaultResponseDto> {
-    const user = await this.findUserById(uuid);
+    checkUserPermission(user, uuid);
+
+    const storedUser = await this.findUserById(uuid);
     const updatePayload = validateUpdatePayload(dto);
 
     if (updatePayload.email) {
@@ -43,18 +49,22 @@ export class UserService {
       updatePayload.password = await bcrypt.hash(updatePayload.password, 10);
     }
 
-    await this.userRepository.update(user.id, updatePayload);
+    await this.userRepository.update(storedUser.id, updatePayload);
     return this.responseMapper.toDefaultResponse(
-      user.id,
+      storedUser.id,
       'User updated successfully',
     );
   }
 
-  public async delete(uuid: string): Promise<DefaultResponseDto> {
-    const user = await this.findUserById(uuid);
-    await this.userRepository.delete(user.id);
+  public async delete(
+    user: UserInterface,
+    uuid: string,
+  ): Promise<DefaultResponseDto> {
+    checkUserPermission(user, uuid);
+    const storedUser = await this.findUserById(uuid);
+    await this.userRepository.delete(storedUser.id);
     return this.responseMapper.toDefaultResponse(
-      user.id,
+      storedUser.id,
       'User deleted successfully',
     );
   }
