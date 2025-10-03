@@ -5,8 +5,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DefaultResponseDto } from 'src/common/dtos/DefaultResponse.dto';
+import { UserInterface } from 'src/common/interfaces/user.interface';
 import { ResponseMapper } from 'src/common/mappers/response.mapper';
+import { checkUserPermission } from 'src/common/utils/check-user-permission.util';
 import { Repository } from 'typeorm';
+import { CartEntity } from '../cart/entities/cart.entity';
 import { CartStatus } from '../cart/enums/cart-status.enum';
 import { CartService } from '../cart/services/cart.service';
 import { UserService } from '../user/user.service';
@@ -28,12 +31,23 @@ export class OrderService {
     return this.orderRepository.find();
   }
 
-  public async findOne(uuid: string): Promise<OrderEntity> {
-    return this.findOrderById(uuid);
+  public async findOne(
+    user: UserInterface,
+    uuid: string,
+  ): Promise<OrderEntity> {
+    const order = await this.findOrderById(uuid);
+    const orderOwner = this.getOrderOwner(order);
+    checkUserPermission(user, orderOwner);
+    return order;
   }
 
-  public async create(dto: CreateOrderDto): Promise<DefaultResponseDto> {
+  public async create(
+    user: UserInterface,
+    dto: CreateOrderDto,
+  ): Promise<DefaultResponseDto> {
     const cart = await this.cartService.findCartById(dto.cart);
+    const cartOwner = this.getCartOwner(cart);
+    checkUserPermission(user, cartOwner);
 
     if (cart.status !== CartStatus.OPEN) {
       throw new BadRequestException('Cart not available for order');
@@ -63,17 +77,23 @@ export class OrderService {
     );
   }
 
-  public async pay(uuid: string): Promise<DefaultResponseDto> {
+  public async pay(
+    user: UserInterface,
+    uuid: string,
+  ): Promise<DefaultResponseDto> {
     const order = await this.findOrderById(uuid);
+    const orderOwner = this.getOrderOwner(order);
+    checkUserPermission(user, orderOwner);
+
     if (order.status !== OrderStatus.PENDING) {
       throw new BadRequestException(
         'Order cannot be updated with current status',
       );
     }
 
-    const user = await this.userService.findUserById(order.cart.user.id);
+    const storedUser = await this.userService.findUserById(order.cart.user.id);
     await this.orderRepository.update(order.id, { status: OrderStatus.PAID });
-    await this.cartService.createCart(user);
+    await this.cartService.createCart(storedUser);
 
     return this.responseMapper.toDefaultResponse(
       order.id,
@@ -81,8 +101,13 @@ export class OrderService {
     );
   }
 
-  public async delete(uuid: string): Promise<DefaultResponseDto> {
+  public async delete(
+    user: UserInterface,
+    uuid: string,
+  ): Promise<DefaultResponseDto> {
     const order = await this.findOrderById(uuid);
+    const orderOwner = this.getOrderOwner(order);
+    checkUserPermission(user, orderOwner);
     const cart = await this.cartService.findCartById(order.cart.id);
 
     await this.orderRepository.delete(order.id);
@@ -103,5 +128,13 @@ export class OrderService {
       throw new NotFoundException('Order not found');
     }
     return order;
+  }
+
+  private getOrderOwner(order: OrderEntity): string {
+    return order.cart.user.id;
+  }
+
+  private getCartOwner(cart: CartEntity): string {
+    return cart.user.id;
   }
 }
