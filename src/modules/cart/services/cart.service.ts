@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UserInterface } from 'src/common/interfaces/user.interface';
+import { checkUserPermission } from 'src/common/utils/check-user-permission.util';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
 import { CartEntity } from '../entities/cart.entity';
@@ -16,8 +18,10 @@ export class CartService {
     return await this.cartRepository.find();
   }
 
-  public async findOne(uuid: string): Promise<CartEntity> {
-    return await this.findCartById(uuid);
+  public async findOne(user: UserInterface, uuid: string): Promise<CartEntity> {
+    const cart = await this.findCartById(uuid);
+    checkUserPermission(user, cart.user.id);
+    return cart;
   }
 
   public async createCart(user: UserEntity): Promise<CartEntity> {

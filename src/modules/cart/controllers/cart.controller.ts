@@ -1,11 +1,13 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/common/decorators/user.decorator';
 import { UuidDto } from 'src/common/dtos/Uuid.dto';
+import { UserInterface } from 'src/common/interfaces/user.interface';
+import { Roles } from 'src/modules/auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
+import { UserRoles } from 'src/modules/user/enums/user-roles.enum';
 import { CartEntity } from '../entities/cart.entity';
 import { CartService } from '../services/cart.service';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
-import { Roles } from 'src/modules/auth/decorators/roles.decorator';
-import { UserRoles } from 'src/modules/user/enums/user-roles.enum';
 
 @Controller('carts')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -20,7 +22,10 @@ export class CartController {
 
   @Get(':uuid')
   @Roles(...Object.values(UserRoles))
-  public async findOne(@Param() { uuid }: UuidDto) {
-    return await this.cartService.findOne(uuid);
+  public async findOne(
+    @User() user: UserInterface,
+    @Param() { uuid }: UuidDto,
+  ) {
+    return await this.cartService.findOne(user, uuid);
   }
 }
