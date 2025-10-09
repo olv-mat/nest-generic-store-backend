@@ -1,13 +1,15 @@
 import { Body, Controller, Param, Patch, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
+import { User } from 'src/common/decorators/user.decorator';
 import { MessageResponseDto } from 'src/common/dtos/MessageResponse.dto';
 import { UuidDto } from 'src/common/dtos/Uuid.dto';
+import { UserInterface } from 'src/common/interfaces/user.interface';
+import { Roles } from 'src/modules/auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
+import { UserRoles } from 'src/modules/user/enums/user-roles.enum';
 import { UpdateCartItemDto } from '../dtos/UpdateCartItem.dto';
 import { CartItemService } from '../services/cart-item.service';
-import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
-import { Roles } from 'src/modules/auth/decorators/roles.decorator';
-import { UserRoles } from 'src/modules/user/enums/user-roles.enum';
 
 @ApiTags('Cart Item')
 @Controller('carts/:uuid/items')
@@ -18,18 +20,20 @@ export class CartItemController {
   @Patch('increase')
   @Roles(...Object.values(UserRoles))
   public async increase(
+    @User() user: UserInterface,
     @Param() { uuid }: UuidDto,
     @Body() dto: UpdateCartItemDto,
   ): Promise<MessageResponseDto> {
-    return await this.cartItemService.increase(uuid, dto);
+    return await this.cartItemService.increase(user, uuid, dto);
   }
 
   @Patch('decrease')
   @Roles(...Object.values(UserRoles))
   public async decrease(
+    @User() user: UserInterface,
     @Param() { uuid }: UuidDto,
     @Body() dto: UpdateCartItemDto,
   ): Promise<MessageResponseDto> {
-    return await this.cartItemService.decrease(uuid, dto);
+    return await this.cartItemService.decrease(user, uuid, dto);
   }
 }

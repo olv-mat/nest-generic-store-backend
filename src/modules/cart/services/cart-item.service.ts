@@ -12,6 +12,8 @@ import { UpdateCartItemDto } from '../dtos/UpdateCartItem.dto';
 import { CartItemEntity } from '../entities/cart-item.entity';
 import { CartStatus } from '../enums/cart-status.enum';
 import { CartService } from './cart.service';
+import { UserInterface } from 'src/common/interfaces/user.interface';
+import { checkUserPermission } from 'src/common/utils/check-user-permission.util';
 
 @Injectable()
 export class CartItemService {
@@ -24,10 +26,12 @@ export class CartItemService {
   ) {}
 
   public async increase(
+    user: UserInterface,
     uuid: string,
     dto: UpdateCartItemDto,
   ): Promise<MessageResponseDto> {
     const cart = await this.cartService.findCartById(uuid);
+    checkUserPermission(user, cart.user.id);
     this.checkIfAvailable(cart.status);
     const product = await this.productService.findProductById(dto.product);
     const quantity = dto.quantity;
@@ -45,10 +49,12 @@ export class CartItemService {
   }
 
   public async decrease(
+    user: UserInterface,
     uuid: string,
     dto: UpdateCartItemDto,
   ): Promise<MessageResponseDto> {
     const cart = await this.cartService.findCartById(uuid);
+    checkUserPermission(user, cart.user.id);
     this.checkIfAvailable(cart.status);
     const product = await this.productService.findProductById(dto.product);
     const quantity = dto.quantity;
