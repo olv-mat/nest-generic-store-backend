@@ -4,8 +4,12 @@ import { RegisterResponseDto } from '../dtos/RegisterResponse.dto';
 
 @Injectable()
 export class AuthResponseMapper {
-  public toLoginResponse(token: string): LoginResponseDto {
-    return new LoginResponseDto(token);
+  public toLoginResponse(
+    token: string,
+    userId: string,
+    cartId: string,
+  ): LoginResponseDto {
+    return new LoginResponseDto(token, userId, cartId);
   }
 
   public toRegisterResponse(

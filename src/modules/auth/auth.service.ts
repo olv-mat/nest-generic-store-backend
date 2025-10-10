@@ -35,7 +35,8 @@ export class AuthService {
     }
 
     const token = this.generateToken(user);
-    return this.authResponseMapper.toLoginResponse(token);
+    const cart = await this.cartService.findActiveCartByUser(user);
+    return this.authResponseMapper.toLoginResponse(token, user.id, cart.id);
   }
 
   public async register(dto: RegisterDto): Promise<RegisterResponseDto> {
