@@ -7,7 +7,7 @@ export class AuthResponseMapper {
   public toLoginResponse(
     token: string,
     userId: string,
-    cartId: string,
+    cartId: string | null,
   ): LoginResponseDto {
     return new LoginResponseDto(token, userId, cartId);
   }
@@ -15,7 +15,7 @@ export class AuthResponseMapper {
   public toRegisterResponse(
     token: string,
     userId: string,
-    cartId: string,
+    cartId: string | null,
     message: string,
   ): RegisterResponseDto {
     return new RegisterResponseDto(token, userId, cartId, message);
